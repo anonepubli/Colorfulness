@@ -6,6 +6,7 @@
 package colorfulnes;
 
 import java.util.Arrays;
+import java.util.Vector;
 import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.clustering.KMeans;
 import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
@@ -14,7 +15,6 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.distance.CosineSimilarity;
 
 /**
  *
@@ -23,8 +23,10 @@ import net.sf.javaml.distance.CosineSimilarity;
 public class Clustering {
 
     public Instance[] instances;
+    PDFPages p;
+    double saving;
 
-    public Clustering(PDFPages p){
+    public Clustering(PDFPages p, double saving){
 
         // Creating the instances to start clustering the data
         this.instances = new Instance[p.getSize()];
@@ -35,12 +37,14 @@ public class Clustering {
             this.instances[i] = new DenseInstance(insta,
                     p.getPagenumbers().get(i));
         }
+        this.p = p;
+        this.saving = saving;
         
     }
 
-    public void cluster(){
+    public Vector<Integer> cluster(){
 
-        int number_of_clusters = 4;
+        int number_of_clusters = 6;
         int its = 100;
 
         Dataset data = new DefaultDataset();
@@ -68,6 +72,9 @@ public class Clustering {
 
         }
 
+        Vector<Integer> fpages = new Vector<Integer>();
+        Vector<Double> averages = new Vector<Double>();
+
         System.out.println("Running Clustering with:");
         System.out.println("Number of clusters = "+number_of_clusters);
         System.out.println("Iterations = "+its);
@@ -84,11 +91,48 @@ public class Clustering {
             System.out.println(" ========== Cluster #"+(i+1)+" size: "
                     +best_clusters[i].size()+" ========== ");
             System.out.println("");
+            double tot = 0;
             for (int j=0;j<best_clusters[i].size();j++) {
                 Integer page = (Integer)best_clusters[i].get(j).classValue();
+                int key = p.pagenumbers.indexOf(page);
+                tot += p.percent_color.get(key);
                 System.out.println(page+1);
             }
+            double aver = tot/best_clusters[i].size();
+            System.out.println("Average = "+aver);
+            averages.add(aver);
         }
+
+        // Selecting the most suitabble pages from the clusters found
+        int target = (int)(p.getSize()*saving);
+        int tot = 0;
+
+        while (tot < target){
+            int select = max_douvector(averages);
+            for (int i=0; i<best_clusters[select].size(); i++){
+                fpages.add((Integer)best_clusters[select].get(i).classValue());
+                tot += 1;
+            }
+            averages.set(select, -1.0);
+        }
+
+        return fpages;
+
+    }
+
+    public int max_douvector(Vector<Double> averages){
+
+        double top = -9999999.0;
+        int index = 0;
+
+        for (int i=0;i<averages.size();i++){
+            if (averages.get(i)>top){
+                top = averages.get(i);
+                index = i;
+            }
+        }
+
+        return index;
 
     }
 

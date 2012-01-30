@@ -23,9 +23,9 @@ public class Main {
 
 
         // Initial parameters
-        String filename = "ex5";
+        String filename = "ex4";
         double saving = 0.5;
-        int method = 0;
+        int method = 1;
         int [] fpages = new int[0];
 
 
@@ -49,15 +49,21 @@ public class Main {
         }
         else if (method == 1) {
             // Clustering
-            Clustering c = new Clustering(pdf);
-            c.cluster();
+            Clustering c = new Clustering(pdf,saving);
+            Vector<Integer> cpages = c.cluster();
+
+            // Filling the final array
+            fpages = new int[cpages.size()];
+            for (int i = 0; i<cpages.size(); i++){
+                fpages[i] = cpages.get(i);
+            }
         }
 
         // Showing all the pages
         int npages = render.numberOfPages(filename);
         boolean go = true;
         if (fpages.length>20){
-            System.out.println(" -+-+- Warning: There are "+fpages.length+" pages to show. Do you want to show them? ([y]/[n])");
+            System.out.println(" ------ Warning: There are "+fpages.length+" pages to show. Do you want to show them? ([y]/[n])");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String answer = null;
             try {
