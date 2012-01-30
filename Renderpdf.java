@@ -16,7 +16,6 @@ import java.util.Vector;
  */
 public class Renderpdf {
 
-
     /*
      * Given an int i and an int n, this function adds 0's to the
      * left of i until it reaches the number of digits in n.
@@ -29,7 +28,7 @@ public class Renderpdf {
      * - OUT string : string representing i with all the 0s it needs
      * 
      */
-    private String digits(int i, int n){
+    public String digits(int i, int n){
         String istr = Integer.toString(i);
         String nstr = Integer.toString(n);
         int y = istr.length();
@@ -51,31 +50,25 @@ public class Renderpdf {
      *                  about the pdf document
      *
      */
-    public PDFPages colorpdf(String filename){
+    public void colorpdf(String filename, PDFPages pdfp){
 
         int n_pages = 0;
 
-        // Number of pages in the pdf document
-        try {
-            PdfReader reader = new PdfReader("pdfs/"+filename+".pdf");
-            n_pages = reader.getNumberOfPages();
-        } catch(Exception e) {
-            System.out.println(e.toString());
-        }
+        n_pages = numberOfPages(filename);
 
         int color, bw = 0;
 
         // Rendering the whole document at once using pdftoppm
 
         String cmd = "pdftoppm "; // command
-        cmd += "-r 50 ";          // flags
+        cmd += "-r 50 -jpeg ";          // flags
         cmd += "pdfs/"+filename+".pdf ";  // source file
         cmd += "pdfs/"+filename;  // source file
 
         //System.out.println(cmd);
 
         try {
-            System.out.println("Rendering PDF...");
+            System.out.println("Rendering PDF "+filename+".pdf...");
             Process p = Runtime.getRuntime().exec(cmd);
             p.waitFor();
             System.out.println("PDF rendered...");
@@ -116,21 +109,36 @@ public class Renderpdf {
                 }
             }
 
-            System.out.println("Total Pages: "+n_pages);
-            System.out.println("Color Pages: "+pagenumbers.size());
-            System.out.println(percent_color);
-            System.out.println(color_variety);
-            System.out.println(pagenumbers);
+            System.out.println("Color Pages / Total Pages = "+pagenumbers.size()+"/"+n_pages);
+//            System.out.println(percent_color);
+//            System.out.println(color_variety);
+//            System.out.println(pagenumbers);
 
-            return new PDFPages(percent_color, color_variety, pagenumbers);
+            // Updating the PDF Object
+            pdfp.color_variety = color_variety;
+            pdfp.pagenumbers = pagenumbers;
+            pdfp.percent_color = percent_color;
+            pdfp.len = pagenumbers.size();
             
 
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+
+    }
+
+    public int numberOfPages(String filename){
+
+        int n = 0;
+        
+        try {
+            PdfReader reader = new PdfReader("pdfs/"+filename+".pdf");
+            n = reader.getNumberOfPages();
         } catch(Exception e) {
             System.out.println(e.toString());
         }
 
-        return null;
-
+        return n;
     }
 
 }

@@ -5,6 +5,9 @@
 
 package colorfulnes;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Vector;
 
 /**
@@ -18,34 +21,66 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        String filename = "ex4";
+
+        // Initial parameters
+        String filename = "ex5";
         double saving = 0.5;
+        int method = 0;
+        int [] fpages = new int[0];
 
+
+        
         // Rendering PDF Document
-        Renderpdf pdf = new Renderpdf();
-        PDFPages pdfp = pdf.colorpdf(filename);
+        PDFPages pdf = new PDFPages();
+        Renderpdf render = new Renderpdf();
+        render.colorpdf(filename,pdf);
 
-        // Manual sorting of the colorfulness
-        Vector<Integer> metric1 = pdfp.sortMetric1();
-        Vector<Integer> cpages = pdfp.newColorSet(metric1,saving);
+        if (method == 0){
+            // Manual sorting of the colorfulness
+            Vector<Integer> metric1 = pdf.sortMetric1();
+            Vector<Integer> cpages = pdf.newColorSet(metric1,saving);
 
-        System.out.println("Metric array sorted: ");
-        System.out.println(metric1);
-        System.out.println("Color pages selected to be printed: "+cpages.size());
-        System.out.println(cpages);
+            // Filling the final array
+            fpages = new int[cpages.size()];
+            for (int i = 0; i<cpages.size(); i++){
+                fpages[i] = cpages.get(i);
+            }
 
-        // Clustering
-        
+        }
+        else if (method == 1) {
+            // Clustering
+            Clustering c = new Clustering(pdf);
+            c.cluster();
+        }
 
+        // Showing all the pages
+        int npages = render.numberOfPages(filename);
+        boolean go = true;
+        if (fpages.length>20){
+            System.out.println(" -+-+- Warning: There are "+fpages.length+" pages to show. Do you want to show them? ([y]/[n])");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String answer = null;
+            try {
+                answer = br.readLine();
+                if (answer.equals("n")) go = false;
+            } catch (IOException ioe) {
+                System.out.println("IO error trying to read user answer...");
+                go = false;
+            }
+        }
+        if (go) {
+            System.out.print("Pages found: ");
+            for (int i = fpages.length-1; i>=0; i--) {
+                System.out.print(fpages[i]+1 + " ");
+                ImageLoader im = new ImageLoader();
+                im.run("/home/jgarrido/NetBeansProjects/Colorfulnes/pdfs/"+filename
+                        +"-"+
+                        render.digits(fpages[i]+1,npages)+
+                        ".jpg","Page "+(fpages[i]+1));
 
-        // Running Genetic Algorithm
-        // Genetics g = new Genetics();
-        // g.genetics_color(pdfp.getPercentages(),0.5);
-
-        
-
-        
-
+            }
+        }
+        System.out.println("");
 
     }
 

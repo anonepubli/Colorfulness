@@ -13,18 +13,26 @@ import java.util.Vector;
  */
 public class PDFPages {
 
-    private Vector<Double> percent_color;
-    private Vector<Integer> color_variety;
-    private Vector<Integer> pagenumbers;
-    private int size;
+    public Vector<Double> percent_color;
+    public Vector<Integer> color_variety;
+    public Vector<Integer> pagenumbers;
+    public Vector<Double> metric1;
+    public int len;
 
     public PDFPages(Vector<Double> percent_color, Vector<Integer> color_variety, Vector<Integer> pagenumbers) {
 
         this.percent_color = percent_color;
         this.color_variety = color_variety;
         this.pagenumbers = pagenumbers;
-        this.size = pagenumbers.size();
+        this.len = pagenumbers.size();
+
+        // Initializing the Metric1 array
+        for (int i = 0; i<this.len; i++)
+            this.metric1.add((double)this.getColor_variety().get(i)*this.getPercent_color().get(i));
         
+    }
+
+    public PDFPages() {
     }
 
     public Vector<Integer> getColor_variety() {
@@ -39,8 +47,12 @@ public class PDFPages {
         return percent_color;
     }
 
-    public int size(){
-        return size;
+    public Vector<Double> getMetric1() {
+        return this.metric1;
+    }
+
+    public int getSize(){
+        return this.len;
     }
 
     public Vector<Integer> sortMetric1(){
