@@ -23,16 +23,17 @@ import net.sf.javaml.core.Instance;
 public class Clustering {
 
     public Instance[] instances;
-    PDFPages p;
+    PDFInfo p;
     double saving;
 
-    public Clustering(PDFPages p, double saving){
+    public Clustering(PDFInfo p, double saving){
 
         // Creating the instances to start clustering the data
         this.instances = new Instance[p.getSize()];
         for(int i = 0; i < p.getSize(); i++) {
             // Creating array for clustering
             double [] insta = {(double)p.getColor_variety().get(i),p.getPercent_color().get(i)};
+            //double [] insta = {(double)p.getColor_variety().get(i)*p.getPercent_color().get(i)};
             // Adding the array to the instances
             this.instances[i] = new DenseInstance(insta,
                     p.getPagenumbers().get(i));
@@ -44,7 +45,7 @@ public class Clustering {
 
     public Vector<Integer> cluster(){
 
-        int number_of_clusters = 6;
+        int number_of_clusters = (int)Math.ceil(this.p.len/4);
         int its = 100;
 
         Dataset data = new DefaultDataset();

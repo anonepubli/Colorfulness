@@ -21,19 +21,47 @@ public class Main {
      */
     public static void main(String[] args) {
 
+        /*
+         * ex7 mountains
+         * ex10 art pictures
+         * ex11 horse pictures?
+         * 
+         * 
+         */
+
 
         // Initial parameters
-        String filename = "ex4";
-        double saving = 0.5;
-        int method = 1;
+        String filename = "ex2";
+        double saving = 0;
+        int method = 0;
         int [] fpages = new int[0];
 
+        PDFInfo pdf = new PDFInfo();
 
+        // Rendering PDF Document using java pixelxpixel
+        Render r1 = new Render();
+        r1.render(filename,pdf);
         
-        // Rendering PDF Document
-        PDFPages pdf = new PDFPages();
-        Renderpdf render = new Renderpdf();
-        render.colorpdf(filename,pdf);
+        // Rendering PDF Document using python script
+        Renderpdf_python r2 = new Renderpdf_python();
+        r2.colorpdf(filename,pdf);
+
+        if (pdf.len==0){
+            System.out.println("");
+            System.out.println(" > There are no color pages in this book. Bye.");
+            System.out.println("");
+            System.exit(0);
+        }
+        if (pdf.len==1 || pdf.len==2){
+            System.out.println("");
+            System.out.println(" > There are few color pages in this book.");
+            System.out.println(" > I recommend to print them all or none of them.");
+            System.out.print(" > Color pages: ");
+            System.out.print(pdf.pagenumbers.toString()+'\n');
+            System.out.println("");
+            System.exit(0);
+        }
+
 
         if (method == 0){
             // Manual sorting of the colorfulness
@@ -60,7 +88,7 @@ public class Main {
         }
 
         // Showing all the pages
-        int npages = render.numberOfPages(filename);
+        int npages = r1.numberOfPages(filename);
         boolean go = true;
         if (fpages.length>20){
             System.out.println(" ------ Warning: There are "+fpages.length+" pages to show. Do you want to show them? ([y]/[n])");
@@ -75,15 +103,14 @@ public class Main {
             }
         }
         if (go) {
-            System.out.print("Pages found: ");
+            System.out.print("Pages found ("+fpages.length+"): ");
             for (int i = fpages.length-1; i>=0; i--) {
                 System.out.print(fpages[i]+1 + " ");
                 ImageLoader im = new ImageLoader();
                 im.run("/home/jgarrido/NetBeansProjects/Colorfulnes/pdfs/"+filename
                         +"-"+
-                        render.digits(fpages[i]+1,npages)+
+                        r1.digits(fpages[i]+1,npages)+
                         ".jpg","Page "+(fpages[i]+1));
-
             }
         }
         System.out.println("");
