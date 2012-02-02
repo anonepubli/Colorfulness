@@ -25,13 +25,14 @@ public class Main {
          * ex7 mountains
          * ex10 art pictures
          * ex11 horse pictures?
-         * 
+         * ex15 good short example
+         * ex16 iguanas good example too
          * 
          */
 
 
         // Initial parameters
-        String filename = "ex9";
+        String filename = "ex17";
         String path_to_pdf = "pdfs/";
         double saving = 1;
         int method = 0;
@@ -118,7 +119,7 @@ public class Main {
                 im.run("/home/jgarrido/NetBeansProjects/Colorfulnes/pdfs/"+filename
                         +"-"+
                         r1.digits(fpages[i],npages)+
-                        ".jpg","Page "+(fpages[i]+1));
+                        ".jpg","Page "+(fpages[i]));
             }
         }
         System.out.println("");

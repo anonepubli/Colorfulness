@@ -83,21 +83,17 @@ public class Render {
     public void render(String filename, String path_to_pdf, PDFInfo pdf){
 
         int npages = numberOfPages(filename);
-        boolean rendered = false;
 
         // First we check if the document is already rendered
         String check = path_to_pdf+filename+"-"+digits(1,npages)+".pdf";
-        try{
-            File fcheck = new File(check);
-            rendered = true;
+        
+        File fcheck = new File(check);
+        if (fcheck.exists())
             System.out.println(filename+".pdf was already rendered...");
-        } catch(Exception e) { 
-            System.out.println(e.toString());
-        }
 
         // If the document is not rendered then we proced with
         // the rendering process
-        if (!rendered) {
+        else {
 
             // Rendering the whole document at once using pdftoppm
 
