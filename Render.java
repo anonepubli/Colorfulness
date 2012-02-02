@@ -32,7 +32,7 @@ public class Render {
         int red = (pixel >> 16) & 0xff;
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;
-        if ((red == green) && (green == blue))
+        if ((red == green) & (green == blue))
             return true;
         return false;
     }
@@ -59,6 +59,15 @@ public class Render {
         return istr;
     }
 
+    /*
+     * Given a PDF document, this function returns the number of
+     * pages found in that document.
+     *
+     *  Params:
+     * - IN  string filename : Filename of the PDF document
+     * - OUT int : Number of pages in the document
+     *
+     */
     public int numberOfPages(String filename){
 
         int n = 0;
@@ -66,45 +75,59 @@ public class Render {
         try {
             PdfReader reader = new PdfReader("pdfs/"+filename+".pdf");
             n = reader.getNumberOfPages();
-        } catch(Exception e) {
-            System.out.println(e.toString());
-        }
+        } catch(Exception e) { System.out.println(e.toString()); }
 
         return n;
     }
 
     public void render(String filename, PDFInfo pdf){
 
-        // Rendering the whole document at once using pdftoppm
+        int npages = numberOfPages(filename);
+        boolean rendered = false;
 
-        String cmd = "pdftoppm "; // command
-        cmd += "-r 50 -jpeg ";          // flags
-        cmd += "pdfs/"+filename+".pdf ";  // source file
-        cmd += "pdfs/"+filename;  // source file
-
-        //System.out.println(cmd);
-
-        try {
-            System.out.println("Rendering PDF "+filename+".pdf...");
-            Process p = Runtime.getRuntime().exec(cmd);
-            p.waitFor();
-            System.out.println("PDF rendered...");
-        } catch(Exception e) {
+        // First we check if the document is already rendered
+        String check = "pdfs/"+filename+"-"+digits(1,npages)+".pdf";
+        try{
+            File fcheck = new File(check);
+            rendered = true;
+            System.out.println(filename+".pdf was already rendered...");
+        } catch(Exception e) { 
             System.out.println(e.toString());
+        }
+
+        // If the document is not rendered then we proced with
+        // the rendering process
+        if (!rendered) {
+
+            // Rendering the whole document at once using pdftoppm
+
+            String cmd = "pdftoppm "; // command
+            cmd += "-r 50 -jpeg ";          // flags
+            cmd += "pdfs/"+filename+".pdf ";  // source file
+            cmd += "pdfs/"+filename;  // source file
+
+            //System.out.println(cmd);
+
+            try {
+                System.out.println("Rendering PDF "+filename+".pdf...");
+                Process p = Runtime.getRuntime().exec(cmd);
+                p.waitFor();
+                System.out.println("PDF rendered...");
+            } catch(Exception e) { System.out.println(e.toString()); }
+            
         }
 
         // Checking for colors in every page
 
         System.out.println("Checking for color in pages...");
 
+        Vector<Double> percent_color = new Vector<Double>();
+        Vector<Integer> color_variety = new Vector<Integer>();
+        Vector<Integer> pagenumbers = new Vector<Integer>();
+
         long startTime = System.nanoTime();
 
         try {
-
-            int npages = numberOfPages(filename);
-            Vector<Double> percent_color = new Vector<Double>();
-            Vector<Integer> color_variety = new Vector<Integer>();
-            Vector<Integer> pagenumbers = new Vector<Integer>();
 
             for (int x=1;x<npages;x++) {
 
@@ -112,15 +135,17 @@ public class Render {
                 BufferedImage im = ImageIO.read(f);
 
                 int tot = 0;
+                int w = im.getWidth();
+                int h = im.getHeight();
 
-                for (int i=0;i<im.getWidth();i++){
-                    for (int j=0;j<im.getHeight();j++){
+                for (int i=0;i<w;i++){
+                    for (int j=0;j<h;j++){
                         if (!sameARGB(im.getRGB(i, j)))
                             tot+=1;
                     }
                 }
 
-                double per = (double)tot/(im.getHeight()*im.getWidth());
+                double per = (double)tot/(h*w);
                 if (per!=0) {
                     pagenumbers.add(x);
                     percent_color.add(per);
@@ -133,9 +158,9 @@ public class Render {
             System.out.println((double)estimatedTime / 1000000000.0);
 
             System.out.println("Color Pages / Total Pages = "+pagenumbers.size()+"/"+npages);
-            //System.out.println(percent_color);
-            //System.out.println(color_variety);
-            //System.out.println(pagenumbers);
+            System.out.println(percent_color);
+            System.out.println(color_variety);
+            System.out.println(pagenumbers);
 
             // Updating the PDF Object
             pdf.color_variety = color_variety;

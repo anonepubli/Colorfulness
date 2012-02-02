@@ -115,9 +115,9 @@ public class Renderpdf_python {
             System.out.println((double)estimatedTime / 1000000000.0);
 
             System.out.println("Color Pages / Total Pages = "+pagenumbers.size()+"/"+n_pages);
-            //System.out.println(percent_color);
-            //System.out.println(color_variety);
-            //System.out.println(pagenumbers);
+            System.out.println(percent_color);
+            System.out.println(color_variety);
+            System.out.println(pagenumbers);
 
             // Updating the PDF Object
             pdfp.color_variety = color_variety;

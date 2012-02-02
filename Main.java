@@ -31,8 +31,8 @@ public class Main {
 
 
         // Initial parameters
-        String filename = "ex2";
-        double saving = 0;
+        String filename = "ex7";
+        double saving = 0.5;
         int method = 0;
         int [] fpages = new int[0];
 
@@ -43,8 +43,8 @@ public class Main {
         r1.render(filename,pdf);
         
         // Rendering PDF Document using python script
-        Renderpdf_python r2 = new Renderpdf_python();
-        r2.colorpdf(filename,pdf);
+        /*Renderpdf_python r2 = new Renderpdf_python();
+        r2.colorpdf(filename,pdf);*/
 
         if (pdf.len==0){
             System.out.println("");
