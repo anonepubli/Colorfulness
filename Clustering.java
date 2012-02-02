@@ -45,7 +45,7 @@ public class Clustering {
 
     public Vector<Integer> cluster(){
 
-        int number_of_clusters = (int)Math.ceil(this.p.len/4);
+        int number_of_clusters = 3;//(int)Math.ceil(this.p.len/4);
         int its = 100;
 
         Dataset data = new DefaultDataset();
@@ -97,10 +97,10 @@ public class Clustering {
                 Integer page = (Integer)best_clusters[i].get(j).classValue();
                 int key = p.pagenumbers.indexOf(page);
                 tot += p.percent_color.get(key);
-                System.out.println(page+1);
+                System.out.print((page+1)+" ");
             }
             double aver = tot/best_clusters[i].size();
-            System.out.println("Average = "+aver);
+            System.out.println("\nAverage = "+aver);
             averages.add(aver);
         }
 
@@ -110,6 +110,9 @@ public class Clustering {
 
         while (tot < target){
             int select = max_douvector(averages);
+            int projection = Math.abs(target - tot + best_clusters[select].size());
+            if (( projection > (target - tot)) && (tot > 0))
+                break;
             for (int i=0; i<best_clusters[select].size(); i++){
                 fpages.add((Integer)best_clusters[select].get(i).classValue());
                 tot += 1;

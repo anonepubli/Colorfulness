@@ -31,7 +31,7 @@ public class Main {
 
 
         // Initial parameters
-        String filename = "ex11";
+        String filename = "ex9";
         String path_to_pdf = "pdfs/";
         double saving = 1;
         int method = 0;
@@ -66,8 +66,15 @@ public class Main {
 
         if (method == 0){
             // Manual sorting of the colorfulness
-            Vector<Integer> metric1 = pdf.sortMetric1();
-            Vector<Integer> cpages = pdf.newColorSet(metric1,saving);
+            PDFInfo pdfsorted = pdf.sortMetric1();
+            Vector<Vector <Integer>> sets = pdfsorted.findSets();
+            Vector<Integer> cpages = pdf.newColorSet(pdfsorted,saving);
+
+            // Printing the manual clusters
+            for (int i=0; i<sets.size(); i++){
+                System.out.println("Size of this set: "+sets.get(i).size());
+                System.out.println(sets.get(i));
+            }
 
             // Filling the final array
             fpages = new int[cpages.size()];

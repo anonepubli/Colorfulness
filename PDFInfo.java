@@ -55,7 +55,7 @@ public class PDFInfo {
         return this.len;
     }
 
-    public Vector<Integer> sortMetric1(){
+    public PDFInfo sortMetric1(){
 
         Vector<Integer> pn = (Vector<Integer>)this.pagenumbers.clone();
         Vector<Integer> metric1 = new Vector<Integer>();
@@ -80,20 +80,60 @@ public class PDFInfo {
             accum = 0;
         }
 
-        return metric1;
+        PDFInfo pdf = new PDFInfo();
+        pdf.metric1 = metric2;
+        pdf.pagenumbers = metric1;
+
+        return pdf;
 
     }
 
-    public Vector<Integer> newColorSet(Vector<Integer> v, double saving){
+    public Vector<Integer> newColorSet(PDFInfo v, double saving){
 
         Vector<Integer> newset = new Vector<Integer>();
-        int cut = (int)((double)v.size()*saving);
+        int cut = (int)((double)v.pagenumbers.size()*saving);
 
         for (int i=0; i<cut; i++){
-            newset.add(v.get(i));
+            newset.add(v.pagenumbers.get(i));
         }
 
         return newset;
+
+    }
+
+    public Vector<Vector<Integer>> findSets(){
+
+        double threshold = 0.5;
+
+        Vector<Integer> set = new Vector<Integer>();
+        Vector<Vector<Integer>> bigset = new Vector<Vector<Integer>>();
+        double cur, nex = 0.0;
+
+        set.add(this.pagenumbers.get(0));
+
+        for (int i = 0; i<this.pagenumbers.size()-1; i++){
+
+            cur = this.metric1.get(i);
+            nex = this.metric1.get(i+1);
+
+//            System.out.println(nex);
+//            System.out.println(cur);
+//            System.out.println(1-(nex/cur));
+
+            if ((1-(nex/cur)) < threshold)
+                set.add(this.pagenumbers.get(i+1));
+            else {
+//                System.out.println("Change");
+                bigset.add((Vector<Integer>)set.clone());
+                set.clear();
+                set.add(this.pagenumbers.get(i+1));
+            }
+
+        }
+
+        bigset.add((Vector<Integer>)set.clone());
+        
+        return bigset;
 
     }
     

@@ -158,17 +158,15 @@ public class Render {
             System.out.println((double)estimatedTime / 1000000000.0);
 
             System.out.println("Color Pages / Total Pages = "+pagenumbers.size()+"/"+npages);
-            System.out.println(percent_color);
-            System.out.println(color_variety);
-            System.out.println(pagenumbers);
+//            System.out.println(percent_color);
+//            System.out.println(color_variety);
+//            System.out.println(pagenumbers);
 
             // Updating the PDF Object
             pdf.color_variety = color_variety;
             pdf.pagenumbers = pagenumbers;
             pdf.percent_color = percent_color;
             pdf.len = pagenumbers.size();
-
-            
 
         } catch (Exception e) { e.printStackTrace(); }
 
