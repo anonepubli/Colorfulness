@@ -31,8 +31,9 @@ public class Main {
 
 
         // Initial parameters
-        String filename = "ex7";
-        double saving = 0.5;
+        String filename = "ex11";
+        String path_to_pdf = "pdfs/";
+        double saving = 1;
         int method = 0;
         int [] fpages = new int[0];
 
@@ -40,11 +41,11 @@ public class Main {
 
         // Rendering PDF Document using java pixelxpixel
         Render r1 = new Render();
-        r1.render(filename,pdf);
+        r1.render(filename,path_to_pdf,pdf);
         
         // Rendering PDF Document using python script
-        /*Renderpdf_python r2 = new Renderpdf_python();
-        r2.colorpdf(filename,pdf);*/
+        //Renderpdf_python r2 = new Renderpdf_python();
+        //r2.colorpdf(filename,path_to_pdf,pdf);
 
         if (pdf.len==0){
             System.out.println("");
@@ -109,7 +110,7 @@ public class Main {
                 ImageLoader im = new ImageLoader();
                 im.run("/home/jgarrido/NetBeansProjects/Colorfulnes/pdfs/"+filename
                         +"-"+
-                        r1.digits(fpages[i]+1,npages)+
+                        r1.digits(fpages[i],npages)+
                         ".jpg","Page "+(fpages[i]+1));
             }
         }

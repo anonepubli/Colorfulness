@@ -50,11 +50,11 @@ public class Renderpdf_python {
      *                  about the pdf document
      *
      */
-    public void colorpdf(String filename, PDFInfo pdfp){
+    public void colorpdf(String filename, String path_to_pdf, PDFInfo pdfp){
 
         int n_pages = 0;
 
-        n_pages = numberOfPages(filename);
+        n_pages = numberOfPages(filename,path_to_pdf);
 
         int color, bw = 0;
 
@@ -62,8 +62,8 @@ public class Renderpdf_python {
 
         String cmd = "pdftoppm "; // command
         cmd += "-r 50 -jpeg ";          // flags
-        cmd += "pdfs/"+filename+".pdf ";  // source file
-        cmd += "pdfs/"+filename;  // source file
+        cmd += path_to_pdf+filename+".pdf ";  // source file
+        cmd += path_to_pdf+filename;  // source file
 
         //System.out.println(cmd);
 
@@ -85,12 +85,12 @@ public class Renderpdf_python {
         // Helper function in python...
         // Maybe its better if I find another way in Java
         try {
-            cmd = "python pdfs/imaging.py "+filename;
+            cmd = "python "+path_to_pdf+"imaging.py "+filename;
             Process p = Runtime.getRuntime().exec(cmd);
             p.waitFor();
             System.out.println("Pages checked...");
 
-            FileReader fr = new FileReader("pdfs/results.txt");
+            FileReader fr = new FileReader(path_to_pdf+"results.txt");
             BufferedReader br = new BufferedReader(fr);
             String s;
             s = br.readLine();
@@ -107,7 +107,7 @@ public class Renderpdf_python {
                 if (!temp[0].equals("0")) {
                     percent_color.add(Double.parseDouble(temp[0]));
                     color_variety.add(Integer.parseInt(temp[1]));
-                    pagenumbers.add(i);
+                    pagenumbers.add((i+1));
                 }
             }
 
@@ -132,12 +132,12 @@ public class Renderpdf_python {
 
     }
 
-    public int numberOfPages(String filename){
+    public int numberOfPages(String filename, String path_to_pdf){
 
         int n = 0;
         
         try {
-            PdfReader reader = new PdfReader("pdfs/"+filename+".pdf");
+            PdfReader reader = new PdfReader(path_to_pdf+filename+".pdf");
             n = reader.getNumberOfPages();
         } catch(Exception e) {
             System.out.println(e.toString());

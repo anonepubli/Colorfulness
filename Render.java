@@ -80,13 +80,13 @@ public class Render {
         return n;
     }
 
-    public void render(String filename, PDFInfo pdf){
+    public void render(String filename, String path_to_pdf, PDFInfo pdf){
 
         int npages = numberOfPages(filename);
         boolean rendered = false;
 
         // First we check if the document is already rendered
-        String check = "pdfs/"+filename+"-"+digits(1,npages)+".pdf";
+        String check = path_to_pdf+filename+"-"+digits(1,npages)+".pdf";
         try{
             File fcheck = new File(check);
             rendered = true;
@@ -103,8 +103,8 @@ public class Render {
 
             String cmd = "pdftoppm "; // command
             cmd += "-r 50 -jpeg ";          // flags
-            cmd += "pdfs/"+filename+".pdf ";  // source file
-            cmd += "pdfs/"+filename;  // source file
+            cmd += path_to_pdf+filename+".pdf ";  // source file
+            cmd += path_to_pdf+filename;  // source file
 
             //System.out.println(cmd);
 
@@ -131,7 +131,7 @@ public class Render {
 
             for (int x=1;x<npages;x++) {
 
-                File f = new File("pdfs/"+filename+"-"+digits(x,npages)+".jpg");
+                File f = new File(path_to_pdf+filename+"-"+digits(x,npages)+".jpg");
                 BufferedImage im = ImageIO.read(f);
 
                 int tot = 0;
