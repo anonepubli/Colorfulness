@@ -8,7 +8,7 @@ package colorfulnes;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  *
@@ -32,17 +32,15 @@ public class Main {
 
 
         // Initial parameters
-        String filename = "ex17";
+        String filename = "ex16";
         String path_to_pdf = "pdfs/";
         double saving = 1;
         int method = 0;
         int [] fpages = new int[0];
 
-        PDFInfo pdf = new PDFInfo();
-
         // Rendering PDF Document using java pixelxpixel
         Render r1 = new Render();
-        r1.render(filename,path_to_pdf,pdf);
+        PDFInfo pdf = r1.render(filename,path_to_pdf);
         
         // Rendering PDF Document using python script
         //Renderpdf_python r2 = new Renderpdf_python();
@@ -68,8 +66,8 @@ public class Main {
         if (method == 0){
             // Manual sorting of the colorfulness
             PDFInfo pdfsorted = pdf.sortMetric1();
-            Vector<Vector <Integer>> sets = pdfsorted.findSets();
-            Vector<Integer> cpages = pdf.newColorSet(pdfsorted,saving);
+            ArrayList<ArrayList <Integer>> sets = pdfsorted.findSets();
+            ArrayList<Integer> cpages = pdf.newColorSet(pdfsorted,saving);
 
             // Printing the manual clusters
             for (int i=0; i<sets.size(); i++){
@@ -87,7 +85,7 @@ public class Main {
         else if (method == 1) {
             // Clustering
             Clustering c = new Clustering(pdf,saving);
-            Vector<Integer> cpages = c.cluster();
+            ArrayList<Integer> cpages = c.cluster();
 
             // Filling the final array
             fpages = new int[cpages.size()];

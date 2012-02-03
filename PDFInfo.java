@@ -5,7 +5,7 @@
 
 package colorfulnes;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  *
@@ -13,13 +13,13 @@ import java.util.Vector;
  */
 public class PDFInfo {
 
-    public Vector<Double> percent_color;
-    public Vector<Integer> color_variety;
-    public Vector<Integer> pagenumbers;
-    public Vector<Double> metric1;
+    public ArrayList<Double> percent_color;
+    public ArrayList<Integer> color_variety;
+    public ArrayList<Integer> pagenumbers;
+    public ArrayList<Double> metric1;
     public int len;
 
-    public PDFInfo(Vector<Double> percent_color, Vector<Integer> color_variety, Vector<Integer> pagenumbers) {
+    public PDFInfo(ArrayList<Double> percent_color, ArrayList<Integer> color_variety, ArrayList<Integer> pagenumbers) {
 
         this.percent_color = percent_color;
         this.color_variety = color_variety;
@@ -35,19 +35,19 @@ public class PDFInfo {
     public PDFInfo() {
     }
 
-    public Vector<Integer> getColor_variety() {
+    public ArrayList<Integer> getColor_variety() {
         return color_variety;
     }
 
-    public Vector<Integer> getPagenumbers() {
+    public ArrayList<Integer> getPagenumbers() {
         return pagenumbers;
     }
 
-    public Vector<Double> getPercent_color() {
+    public ArrayList<Double> getPercent_color() {
         return percent_color;
     }
 
-    public Vector<Double> getMetric1() {
+    public ArrayList<Double> getMetric1() {
         return this.metric1;
     }
 
@@ -57,9 +57,9 @@ public class PDFInfo {
 
     public PDFInfo sortMetric1(){
 
-        Vector<Integer> pn = (Vector<Integer>)this.pagenumbers.clone();
-        Vector<Integer> metric1 = new Vector<Integer>();
-        Vector<Double> metric2 = new Vector<Double>();
+        ArrayList<Integer> pn = (ArrayList<Integer>)this.pagenumbers.clone();
+        ArrayList<Integer> metric1 = new ArrayList<Integer>();
+        ArrayList<Double> metric2 = new ArrayList<Double>();
 
         double accum = 0;
         int max = 0;
@@ -88,9 +88,9 @@ public class PDFInfo {
 
     }
 
-    public Vector<Integer> newColorSet(PDFInfo v, double saving){
+    public ArrayList<Integer> newColorSet(PDFInfo v, double saving){
 
-        Vector<Integer> newset = new Vector<Integer>();
+        ArrayList<Integer> newset = new ArrayList<Integer>();
         int cut = (int)((double)v.pagenumbers.size()*saving);
 
         for (int i=0; i<cut; i++){
@@ -101,12 +101,12 @@ public class PDFInfo {
 
     }
 
-    public Vector<Vector<Integer>> findSets(){
+    public ArrayList<ArrayList<Integer>> findSets(){
 
         double threshold = 0.5;
 
-        Vector<Integer> set = new Vector<Integer>();
-        Vector<Vector<Integer>> bigset = new Vector<Vector<Integer>>();
+        ArrayList<Integer> set = new ArrayList<Integer>();
+        ArrayList<ArrayList<Integer>> bigset = new ArrayList<ArrayList<Integer>>();
         double cur, nex = 0.0;
 
         set.add(this.pagenumbers.get(0));
@@ -124,14 +124,14 @@ public class PDFInfo {
                 set.add(this.pagenumbers.get(i+1));
             else {
 //                System.out.println("Change");
-                bigset.add((Vector<Integer>)set.clone());
+                bigset.add((ArrayList<Integer>)set.clone());
                 set.clear();
                 set.add(this.pagenumbers.get(i+1));
             }
 
         }
 
-        bigset.add((Vector<Integer>)set.clone());
+        bigset.add((ArrayList<Integer>)set.clone());
         
         return bigset;
 

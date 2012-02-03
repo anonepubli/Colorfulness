@@ -6,7 +6,7 @@
 package colorfulnes;
 
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.clustering.KMeans;
 import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
@@ -43,7 +43,7 @@ public class Clustering {
         
     }
 
-    public Vector<Integer> cluster(){
+    public ArrayList<Integer> cluster(){
 
         int number_of_clusters = 3;//(int)Math.ceil(this.p.len/4);
         int its = 100;
@@ -73,8 +73,8 @@ public class Clustering {
 
         }
 
-        Vector<Integer> fpages = new Vector<Integer>();
-        Vector<Double> averages = new Vector<Double>();
+        ArrayList<Integer> fpages = new ArrayList<Integer>();
+        ArrayList<Double> averages = new ArrayList<Double>();
 
         System.out.println("Running Clustering with:");
         System.out.println("Number of clusters = "+number_of_clusters);
@@ -109,7 +109,7 @@ public class Clustering {
         int tot = 0;
 
         while (tot < target){
-            int select = max_douvector(averages);
+            int select = max_douArrayList(averages);
             int projection = Math.abs(target - tot + best_clusters[select].size());
             if (( projection > (target - tot)) && (tot > 0))
                 break;
@@ -124,7 +124,7 @@ public class Clustering {
 
     }
 
-    public int max_douvector(Vector<Double> averages){
+    public int max_douArrayList(ArrayList<Double> averages){
 
         double top = -9999999.0;
         int index = 0;

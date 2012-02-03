@@ -8,7 +8,7 @@ package colorfulnes;
 import com.itextpdf.text.pdf.PdfReader;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 /**
@@ -17,9 +17,21 @@ import javax.imageio.ImageIO;
  */
 public class Render {
 
+     /*
+     * Void Constructor
+     *
+     */
     public Render() {
     }
 
+    /*
+     * Given an input int pixel, this function prints the information of this
+     * pixel: Alpha, Red, Green, Blue.
+     *
+     *  Params:
+     * - IN  int i :  pixel
+     *
+     */
     public void printPixelARGB(int pixel) {
         int alpha = (pixel >> 24) & 0xff;
         int red = (pixel >> 16) & 0xff;
@@ -28,6 +40,15 @@ public class Render {
         System.out.println("argb: " + alpha + ", " + red + ", " + green + ", " + blue);
     }
 
+    /*
+     * Compares if a pixel has the same RGB values (to determine if the
+     * pixel is greyscale or color)
+     *
+     *  Params:
+     * - IN  int i :  pixel
+     * - OUT boolean : true if the R, G and B values are the same
+     *
+     */
     public boolean sameARGB(int pixel) {
         int red = (pixel >> 16) & 0xff;
         int green = (pixel >> 8) & 0xff;
@@ -75,12 +96,24 @@ public class Render {
         try {
             PdfReader reader = new PdfReader("pdfs/"+filename+".pdf");
             n = reader.getNumberOfPages();
-        } catch(Exception e) { System.out.println(e.toString()); }
+        } catch(Exception e) { e.printStackTrace(); }
 
         return n;
     }
 
-    public void render(String filename, String path_to_pdf, PDFInfo pdf){
+    /*
+     * Main function of the class. First it renders the pdf document
+     * in one image per page (if the document wasn't rendered already).
+     * After this, it check for colors on every page and outputs a
+     * PDFInfo object containing this information
+     *
+     *  Params:
+     * - IN  string filename : Filename of the PDF document
+     * - IN  string path_to_pdf : Path to the folder where all the pdfs are
+     * - OUT PDFInfo : Object containing all the PDF information
+     *
+     */
+    public PDFInfo render(String filename, String path_to_pdf){
 
         int npages = numberOfPages(filename);
 
@@ -109,7 +142,7 @@ public class Render {
                 Process p = Runtime.getRuntime().exec(cmd);
                 p.waitFor();
                 System.out.println("PDF rendered...");
-            } catch(Exception e) { System.out.println(e.toString()); }
+            } catch(Exception e) { e.printStackTrace(); }
             
         }
 
@@ -117,9 +150,10 @@ public class Render {
 
         System.out.println("Checking for color in pages...");
 
-        Vector<Double> percent_color = new Vector<Double>();
-        Vector<Integer> color_variety = new Vector<Integer>();
-        Vector<Integer> pagenumbers = new Vector<Integer>();
+        ArrayList<Double> percent_color = new ArrayList<Double>();
+        ArrayList<Integer> color_variety = new ArrayList<Integer>();
+        ArrayList<Integer> pagenumbers = new ArrayList<Integer>();
+        PDFInfo pdf = new PDFInfo();
 
         long startTime = System.nanoTime();
 
@@ -167,7 +201,9 @@ public class Render {
         } catch (Exception e) { e.printStackTrace(); }
 
         System.out.println("Pages checked...");
-        
+
+        return pdf;
+
     }
 
 }

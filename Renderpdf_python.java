@@ -8,7 +8,7 @@ package colorfulnes;
 import com.itextpdf.text.pdf.PdfReader;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  *
@@ -96,11 +96,11 @@ public class Renderpdf_python {
             s = br.readLine();
             fr.close();
 
-            // Building the vectors with the info of the color
+            // Building the ArrayLists with the info of the color
             // on every page
-            Vector<Double> percent_color = new Vector<Double>();
-            Vector<Integer> color_variety = new Vector<Integer>();
-            Vector<Integer> pagenumbers = new Vector<Integer>();
+            ArrayList<Double> percent_color = new ArrayList<Double>();
+            ArrayList<Integer> color_variety = new ArrayList<Integer>();
+            ArrayList<Integer> pagenumbers = new ArrayList<Integer>();
             String [] colors = s.split(",");
             for (int i = 0; i<colors.length; i++){
                 String [] temp = colors[i].split(" ");
