@@ -241,7 +241,7 @@ public class PDFInfo {
 
     public void findSets(){
 
-        double threshold = 0.5;
+        double threshold = 0.1;
 
         this.smetric1 = new ArrayList<ArrayList<Double>>();
         this.spagenumbers = new ArrayList<ArrayList<Integer>>();

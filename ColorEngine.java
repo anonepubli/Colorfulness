@@ -114,32 +114,9 @@ public class ColorEngine {
 
         // Showing all the pages
         int npages = r1.numberOfPages(filename);
-        boolean go = true;
-        if (fpages.length>20){
-            System.out.println(" ------ Warning: There are "+fpages.length+" pages to show. Do you want to show them? ([y]/[n])");
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String answer = null;
-            try {
-                answer = br.readLine();
-                if (answer.equals("n")) go = false;
-            } catch (IOException ioe) {
-                System.out.println("IO error trying to read user answer...");
-                go = false;
-            }
-        }
-        if (go) {
-            System.out.print("Pages found ("+fpages.length+"): ");
-            for (int i = fpages.length-1; i>=0; i--) {
-                System.out.print(fpages[i]+1 + " ");
-                ImageLoader im = new ImageLoader();
 
-                im.run("/home/jgarrido/NetBeansProjects/Colorfulnes/pdfs/"+filename
-                        +"-"+
-                        r1.digits(fpages[i],npages)+
-                        ".jpg","Page "+(fpages[i]));
-            }
-        }
-        System.out.println("");
+        ImageLoader im = new ImageLoader();
+        im.draw(pdf.spagenumbers, filename, path_to_pdf,npages);
 
     }
 
