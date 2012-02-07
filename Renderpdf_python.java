@@ -123,7 +123,6 @@ public class Renderpdf_python {
             pdfp.color_variety = color_variety;
             pdfp.pagenumbers = pagenumbers;
             pdfp.percent_color = percent_color;
-            pdfp.len = pagenumbers.size();
             
 
         } catch(Exception e) {

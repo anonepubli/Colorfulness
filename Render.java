@@ -6,9 +6,13 @@
 package colorfulnes;
 
 import com.itextpdf.text.pdf.PdfReader;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import javax.imageio.ImageIO;
 
 /**
@@ -25,19 +29,18 @@ public class Render {
     }
 
     /*
-     * Given an input int pixel, this function prints the information of this
-     * pixel: Alpha, Red, Green, Blue.
+     * Given an input int pixel, this function returns the RGB data as a
+     * string: Red, Green, Blue.
      *
      *  Params:
      * - IN  int i :  pixel
      *
      */
-    public void printPixelARGB(int pixel) {
-        int alpha = (pixel >> 24) & 0xff;
+    public String getRGB(int pixel) {
         int red = (pixel >> 16) & 0xff;
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;
-        System.out.println("argb: " + alpha + ", " + red + ", " + green + ", " + blue);
+        return red + ", " + green + ", " + blue;
     }
 
     /*
@@ -118,7 +121,8 @@ public class Render {
         int npages = numberOfPages(filename);
 
         // First we check if the document is already rendered
-        String check = path_to_pdf+filename+"-"+digits(1,npages)+".pdf";
+        String check = path_to_pdf+filename+"-"+digits(1,npages)+".jpg";
+        System.out.println(check);
         
         File fcheck = new File(check);
         if (fcheck.exists())
@@ -150,18 +154,28 @@ public class Render {
 
         System.out.println("Checking for color in pages...");
 
+        // Setting all the variables
         ArrayList<Double> percent_color = new ArrayList<Double>();
         ArrayList<Integer> color_variety = new ArrayList<Integer>();
         ArrayList<Integer> pagenumbers = new ArrayList<Integer>();
+
         PDFInfo pdf = new PDFInfo();
+
+        // Initializing the histograms
+        for (int i = 0; i<npages;i++)
+            pdf.histograms.add(new HashMap<Integer, Integer>());
+
+        // Initializing the colors
+        for (int i = 0; i<npages;i++)
+            pdf.rgbs.add(new RGB());
 
         long startTime = System.nanoTime();
 
         try {
 
-            for (int x=1;x<npages;x++) {
+            for (int x=0;x<npages;x++) {
 
-                File f = new File(path_to_pdf+filename+"-"+digits(x,npages)+".jpg");
+                File f = new File(path_to_pdf+filename+"-"+digits(x+1,npages)+".jpg");
                 BufferedImage im = ImageIO.read(f);
 
                 int tot = 0;
@@ -170,8 +184,11 @@ public class Render {
 
                 for (int i=0;i<w;i++){
                     for (int j=0;j<h;j++){
-                        if (!sameARGB(im.getRGB(i, j)))
+                        int pix = im.getRGB(i, j);
+                        if (!sameARGB(pix)) {
                             tot+=1;
+                            pdf.hist(pix,x); // Add it to the histogram
+                        }
                     }
                 }
 
@@ -181,11 +198,19 @@ public class Render {
                     percent_color.add(per);
                     color_variety.add(tot);
                 }
+
                 
             }
 
+            // Setting all the rgbs
+            for (int i = 0; i<npages;i++){
+                //System.out.println("Page "+i+": ");
+                pdf.rgbs.set(i, pdf.colorAve(pdf.histograms.get(i)));
+                //System.out.println(pdf.rgbs.get(i).toString());
+            }
+
             long estimatedTime = System.nanoTime() - startTime;
-            System.out.println((double)estimatedTime / 1000000000.0);
+            System.out.println((double)estimatedTime / 1000000000.0+ " secs.");
 
             System.out.println("Color Pages / Total Pages = "+pagenumbers.size()+"/"+npages);
 //            System.out.println(percent_color);
@@ -196,7 +221,6 @@ public class Render {
             pdf.color_variety = color_variety;
             pdf.pagenumbers = pagenumbers;
             pdf.percent_color = percent_color;
-            pdf.len = pagenumbers.size();
 
         } catch (Exception e) { e.printStackTrace(); }
 

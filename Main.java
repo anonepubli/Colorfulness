@@ -5,20 +5,12 @@
 
 package colorfulnes;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 /**
  *
  * @author jgarrido
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
 
         /*
@@ -27,100 +19,16 @@ public class Main {
          * ex11 horse pictures?
          * ex15 good short example
          * ex16 iguanas good example too
-         * 
+         * ex17 art good example
          */
-
-
-        // Initial parameters
-        String filename = "ex16";
-        String path_to_pdf = "pdfs/";
-        double saving = 1;
-        int method = 0;
-        int [] fpages = new int[0];
-
-        // Rendering PDF Document using java pixelxpixel
-        Render r1 = new Render();
-        PDFInfo pdf = r1.render(filename,path_to_pdf);
         
-        // Rendering PDF Document using python script
-        //Renderpdf_python r2 = new Renderpdf_python();
-        //r2.colorpdf(filename,path_to_pdf,pdf);
+        String filename = "ex15";
+        String path_to_pdf = "pdfs/";
+        String method = "manual";
 
-        if (pdf.len==0){
-            System.out.println("");
-            System.out.println(" > There are no color pages in this book. Bye.");
-            System.out.println("");
-            System.exit(0);
-        }
-        if (pdf.len==1 || pdf.len==2){
-            System.out.println("");
-            System.out.println(" > There are few color pages in this book.");
-            System.out.println(" > I recommend to print them all or none of them.");
-            System.out.print(" > Color pages: ");
-            System.out.print(pdf.pagenumbers.toString()+'\n');
-            System.out.println("");
-            System.exit(0);
-        }
-
-
-        if (method == 0){
-            // Manual sorting of the colorfulness
-            PDFInfo pdfsorted = pdf.sortMetric1();
-            ArrayList<ArrayList <Integer>> sets = pdfsorted.findSets();
-            ArrayList<Integer> cpages = pdf.newColorSet(pdfsorted,saving);
-
-            // Printing the manual clusters
-            for (int i=0; i<sets.size(); i++){
-                System.out.println("Size of this set: "+sets.get(i).size());
-                System.out.println(sets.get(i));
-            }
-
-            // Filling the final array
-            fpages = new int[cpages.size()];
-            for (int i = 0; i<cpages.size(); i++){
-                fpages[i] = cpages.get(i);
-            }
-
-        }
-        else if (method == 1) {
-            // Clustering
-            Clustering c = new Clustering(pdf,saving);
-            ArrayList<Integer> cpages = c.cluster();
-
-            // Filling the final array
-            fpages = new int[cpages.size()];
-            for (int i = 0; i<cpages.size(); i++){
-                fpages[i] = cpages.get(i);
-            }
-        }
-
-        // Showing all the pages
-        int npages = r1.numberOfPages(filename);
-        boolean go = true;
-        if (fpages.length>20){
-            System.out.println(" ------ Warning: There are "+fpages.length+" pages to show. Do you want to show them? ([y]/[n])");
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String answer = null;
-            try {
-                answer = br.readLine();
-                if (answer.equals("n")) go = false;
-            } catch (IOException ioe) {
-                System.out.println("IO error trying to read user answer...");
-                go = false;
-            }
-        }
-        if (go) {
-            System.out.print("Pages found ("+fpages.length+"): ");
-            for (int i = fpages.length-1; i>=0; i--) {
-                System.out.print(fpages[i]+1 + " ");
-                ImageLoader im = new ImageLoader();
-                im.run("/home/jgarrido/NetBeansProjects/Colorfulnes/pdfs/"+filename
-                        +"-"+
-                        r1.digits(fpages[i],npages)+
-                        ".jpg","Page "+(fpages[i]));
-            }
-        }
-        System.out.println("");
+        // Starting the Color Engine
+        ColorEngine engine = new ColorEngine();
+        engine.run(filename, path_to_pdf, method);
 
     }
 

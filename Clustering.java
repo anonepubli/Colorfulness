@@ -26,11 +26,11 @@ public class Clustering {
     PDFInfo p;
     double saving;
 
-    public Clustering(PDFInfo p, double saving){
+    public Clustering(PDFInfo p){
 
         // Creating the instances to start clustering the data
-        this.instances = new Instance[p.getSize()];
-        for(int i = 0; i < p.getSize(); i++) {
+        this.instances = new Instance[p.pagenumbers.size()];
+        for(int i = 0; i < p.pagenumbers.size(); i++) {
             // Creating array for clustering
             double [] insta = {(double)p.getColor_variety().get(i),p.getPercent_color().get(i)};
             //double [] insta = {(double)p.getColor_variety().get(i)*p.getPercent_color().get(i)};
@@ -39,7 +39,6 @@ public class Clustering {
                     p.getPagenumbers().get(i));
         }
         this.p = p;
-        this.saving = saving;
         
     }
 
@@ -105,7 +104,7 @@ public class Clustering {
         }
 
         // Selecting the most suitabble pages from the clusters found
-        int target = (int)(p.getSize()*saving);
+        int target = (int)(p.pagenumbers.size()*saving);
         int tot = 0;
 
         while (tot < target){
