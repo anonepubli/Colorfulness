@@ -92,12 +92,12 @@ public class Render {
      * - OUT int : Number of pages in the document
      *
      */
-    public int numberOfPages(String filename){
+    public int numberOfPages(String filename, String path){
 
         int n = 0;
 
         try {
-            PdfReader reader = new PdfReader("pdfs/"+filename+".pdf");
+            PdfReader reader = new PdfReader(path+filename+".pdf");
             n = reader.getNumberOfPages();
         } catch(Exception e) { e.printStackTrace(); }
 
@@ -118,7 +118,7 @@ public class Render {
      */
     public PDFInfo render(String filename, String path_to_pdf){
 
-        int npages = numberOfPages(filename);
+        int npages = numberOfPages(filename, path_to_pdf);
 
         // First we check if the document is already rendered
         String check = path_to_pdf+filename+"-"+digits(1,npages)+".jpg";
@@ -210,7 +210,7 @@ public class Render {
             }
 
             long estimatedTime = System.nanoTime() - startTime;
-            System.out.println((double)estimatedTime / 1000000000.0+ " secs.");
+            System.out.println((double)estimatedTime / 1000000000.0+ " secs. analyzing the rendered images");
 
             System.out.println("Color Pages / Total Pages = "+pagenumbers.size()+"/"+npages);
 //            System.out.println(percent_color);

@@ -5,6 +5,10 @@
 
 package colorfulnes;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  *
  * @author jgarrido
@@ -22,14 +26,22 @@ public class Main {
          * ex17 art good example
          */
 
-        args[0]="ex10";
-        String filename = "ex10";
-        String path_to_pdf = "pdfs/";
+        String filename = "ex1";
+        if (args.length>0)
+            filename = args[0];
+        String path_to_pdf = "/home/jgarrido/NetBeansProjects/Colorfulnes/pdfs/";
         String method = "manual";
 
         // Starting the Color Engine
         ColorEngine engine = new ColorEngine();
-        engine.run(filename, path_to_pdf, method);
+        String url = engine.run(filename, path_to_pdf, method);
+
+        // Writing the serial into a file so php can ack that
+        try {
+            BufferedWriter out = new BufferedWriter(new FileWriter("url.txt"));
+            out.write(url);
+            out.close();
+        } catch (IOException e) { }
 
     }
 

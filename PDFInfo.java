@@ -185,7 +185,7 @@ public class PDFInfo {
 
     public void mergeSets(){
 
-        System.out.println("");
+        //System.out.println("");
 
         // We repeat this process until we have at least 3 clusters
         while (spagenumbers.size()>3){
@@ -211,7 +211,7 @@ public class PDFInfo {
                 distances.add(distance);
             }
 
-            System.out.println("Distances: "+distances);
+            //System.out.println("Distances: "+distances);
 
             // Search for the minimum distance between a pair of sets
             Double min = Double.MAX_VALUE;
@@ -231,11 +231,11 @@ public class PDFInfo {
             spagenumbers.remove(index+1);
             spagenumbers.set(index, newset);
 
-            System.out.println(spagenumbers);
+            //System.out.println(spagenumbers);
             
         }
 
-        System.out.println("");
+        //System.out.println("");
 
     }
 

@@ -35,7 +35,7 @@ public class ImageLoader {
     }
 
     // Draw all the images of a set inside a Browser window
-    public void draw (ArrayList<ArrayList<Integer>> pages, String filename, String path, int npages){
+    public String draw (ArrayList<ArrayList<Integer>> pages, String filename, String path, int npages){
 
         String serial = "";
         
@@ -46,13 +46,16 @@ public class ImageLoader {
             serial+="-";
         }
 
+        String url = "";
+
         try {
-            java.awt.Desktop.getDesktop().browse(java.net.URI.create("http://localhost/colorfulnes/colorout.php?serial="+serial+"&filename="+filename+"&npages="+npages));
+            url = "http://localhost/colorfulnes/colorout.php?serial="+serial+"&filename="+filename+"&npages="+npages;
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        System.out.println(serial);
+        return url;
         
     }
 

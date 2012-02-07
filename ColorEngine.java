@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class ColorEngine {
 
-    public void run(String filename, String path_to_pdf, String method){
+    public String run(String filename, String path_to_pdf, String method){
 
 
         int [] fpages = new int[0];
@@ -113,10 +113,11 @@ public class ColorEngine {
         }
 
         // Showing all the pages
-        int npages = r1.numberOfPages(filename);
+        int npages = r1.numberOfPages(filename, path_to_pdf);
 
         ImageLoader im = new ImageLoader();
-        im.draw(pdf.spagenumbers, filename, path_to_pdf,npages);
+        return im.draw(pdf.spagenumbers, filename, path_to_pdf,npages);
+
 
     }
 
